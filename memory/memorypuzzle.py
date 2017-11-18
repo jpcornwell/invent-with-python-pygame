@@ -272,18 +272,55 @@ def startGameAnimation(board):
     coverBoxesAnimation(board, boxes)
 
 def gameWonAnimation(board):
-    # flash the background color when the player has won
-    coveredBoxes = generateRevealedBoxesData(True)
-    color1 = LIGHTBGCOLOR
-    color2 = BGCOLOR
+    background = DISPLAYSURF.copy()
+    firework = {
+            'x': 450,
+            'y': 450,
+            'radius': 7,
+            'x_speed': -3,
+            'y_speed': -35,
+            'x_accel': 0,
+            'y_accel': 2,
+            'color': RED,
+            'isVisible': True
+            }
+    particles = [
+            {'x': 1, 'y': 1, 'x_speed': 1, 'y_speed': 1, 'radius': 5, 'alpha': 255},
+            {'x': 1, 'y': 1, 'x_speed': -1, 'y_speed': -1, 'radius': 5, 'alpha': 255},
+            {'x': 1, 'y': 1, 'x_speed': 0, 'y_speed': 1, 'radius': 5, 'alpha': 255},
+            {'x': 1, 'y': 1, 'x_speed': 1, 'y_speed': 0, 'radius': 5, 'alpha': 255},
+            {'x': 1, 'y': 1, 'x_speed': 0, 'y_speed': -1, 'radius': 5, 'alpha': 255},
+            {'x': 1, 'y': 1, 'x_speed': -1, 'y_speed': 0, 'radius': 5, 'alpha': 255},
+            ]
 
-    for i in range(13):
-        color1, color2 = color2, color1 # swap colors
-        DISPLAYSURF.fill(color1)
-        drawBoard(board, coveredBoxes)
+    while True:
+        DISPLAYSURF.blit(background, (0,0))
+        if firework['isVisible']:
+            pygame.draw.circle(DISPLAYSURF, firework['color'], (firework['x'], firework['y']), firework['radius'])
+            firework['x'] += firework['x_speed']
+            firework['x_speed'] += firework['x_accel']
+            firework['y'] += firework['y_speed']
+            firework['y_speed'] += firework['y_accel']
+            if firework['y'] <= 150:
+                firework['isVisible'] = False
+                for particle in particles:
+                    particle['x'] = firework['x']
+                    particle['y'] = firework['y']
+        else: # draw particles
+            for particle in particles:
+                s = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
+                s.set_colorkey((0,0,0))
+                s.set_alpha(particle['alpha'])
+                pygame.draw.circle(s, firework['color'], (particle['x'], particle['y']), particle['radius'])
+                DISPLAYSURF.blit(s, (0,0))
+                particle['x'] += particle['x_speed']
+                particle['y'] += particle['y_speed']
+                particle['alpha'] -= 3
+                if particle['alpha'] <= 0:
+                    return
+                
         pygame.display.update()
-        pygame.time.wait(300)
-
+        FPSCLOCK.tick(FPS)
 
 def hasWon(revealedBoxes):
     # Returns True if all the boxes have been revealed, otherwise False
