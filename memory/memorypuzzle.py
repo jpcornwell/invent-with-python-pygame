@@ -102,16 +102,11 @@ def main():
                         revealedBoxes[boxx][boxy] = False
                     elif hasWon(revealedBoxes): # check if all pairs found
                         gameWonAnimation(mainBoard)
-                        pygame.time.wait(2000)
+                        coverBoxesAnimation(mainBoard, revealedBoxes)
 
                         # Reset the board
                         mainBoard = getRandomizedBoard()
                         revealedBoxes = generateRevealedBoxesData(False)
-
-                        # Show the fully unrevealed board for a second.
-                        drawBoard(mainBoard, revealedBoxes)
-                        pygame.display.update()
-                        pygame.time.wait(1000)
 
                         # Replay the start game animation.
                         startGameAnimation(mainBoard)
