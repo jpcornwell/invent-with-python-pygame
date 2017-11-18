@@ -1,5 +1,5 @@
 # Memory Puzzle
-# By Al Sweigart al@inventwithpython.com
+# Originally by Al Sweigart al@inventwithpython.com
 # http://inventwithpython.com/pygame
 # Released under a "Simplified BSD" license
 
@@ -12,8 +12,8 @@ WINDOWHEIGHT = 480 # size of windows' height in pixels
 REVEALSPEED = 8 # speed boxes' sliding reveals and covers
 BOXSIZE = 40 # size of box height & width in pixels
 GAPSIZE = 10 # size of gap between boxes in pixels
-BOARDWIDTH = 10 # number of columns of icons
-BOARDHEIGHT = 7 # number of rows of icons
+BOARDWIDTH = 5 # number of columns of icons
+BOARDHEIGHT = 4 # number of rows of icons
 assert (BOARDWIDTH * BOARDHEIGHT) % 2 == 0, 'Board needs to have an even number of boxes for pairs of matches.'
 XMARGIN = int((WINDOWWIDTH - (BOARDWIDTH * (BOXSIZE + GAPSIZE))) / 2)
 YMARGIN = int((WINDOWHEIGHT - (BOARDHEIGHT * (BOXSIZE + GAPSIZE))) / 2)
@@ -251,20 +251,25 @@ def drawHighlightBox(boxx, boxy):
 
 
 def startGameAnimation(board):
-    # Randomly reveal the boxes 8 at a time.
     coveredBoxes = generateRevealedBoxesData(False)
     boxes = []
     for x in range(BOARDWIDTH):
         for y in range(BOARDHEIGHT):
             boxes.append( (x, y) )
-    random.shuffle(boxes)
-    boxGroups = splitIntoGroupsOf(8, boxes)
 
     drawBoard(board, coveredBoxes)
-    for boxGroup in boxGroups:
-        revealBoxesAnimation(board, boxGroup)
-        coverBoxesAnimation(board, boxGroup)
+    revealBoxesAnimation(board, boxes)
 
+    pygame.event.clear()
+    while True:
+        event = pygame.event.wait()
+        if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+            pygame.quit()
+            sys.exit()
+        if event.type == MOUSEBUTTONUP:
+            break
+
+    coverBoxesAnimation(board, boxes)
 
 def gameWonAnimation(board):
     # flash the background color when the player has won
