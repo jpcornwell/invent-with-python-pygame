@@ -63,9 +63,6 @@ def main():
     DISPLAYSURF.fill(BGCOLOR)
     startGameAnimation(mainBoard)
 
-    # temporary
-    gameWonAnimation()
-
     while True: # main game loop
         mouseClicked = False
 
