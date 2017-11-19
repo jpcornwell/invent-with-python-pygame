@@ -284,7 +284,16 @@ def gameWonAnimation():
             # if firework has exploded and particles are all gone then firework is done
             if not firework.isVisible and len(firework.particles) == 0:
                 fireworks.remove(firework)
+
+        for event in pygame.event.get():
+            if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+                pygame.quit()
+                sys.exit()
+            if event.type == MOUSEBUTTONUP:
                 fireworks.append(Firework())
+
+        if len(fireworks) == 0:
+            fireworks.append(Firework())
 
         pygame.display.update()
         FPSCLOCK.tick(FPS)
