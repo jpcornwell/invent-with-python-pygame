@@ -271,16 +271,20 @@ def startGameAnimation(board):
 
 def gameWonAnimation():
     background = DISPLAYSURF.copy()
-    firework = Firework()
+    fireworks = []
+    fireworks.append(Firework())
 
     while True:
         DISPLAYSURF.blit(background, (0,0))
-        firework.draw()
-        firework.update()
 
-        # if firework has exploded and particles are all gone then firework is done
-        if not firework.isVisible and len(firework.particles) == 0:
-            return
+        for firework in fireworks:
+            firework.draw()
+            firework.update()
+
+            # if firework has exploded and particles are all gone then firework is done
+            if not firework.isVisible and len(firework.particles) == 0:
+                fireworks.remove(firework)
+                fireworks.append(Firework())
 
         pygame.display.update()
         FPSCLOCK.tick(FPS)
