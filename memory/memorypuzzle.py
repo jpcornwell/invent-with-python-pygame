@@ -308,10 +308,10 @@ def hasWon(revealedBoxes):
 class Firework:
 
     def __init__(self):
-        self.x = 450
+        self.x = random.randint(150, 450)
         self.y = 450
         self.radius = 7
-        self.x_speed = -3
+        self.x_speed = random.randint(-8, 8)
         self.y_speed = -35
         self.x_accel = 0
         self.y_accel = 2
