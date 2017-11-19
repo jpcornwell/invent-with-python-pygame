@@ -312,9 +312,9 @@ class Firework:
         self.y = 450
         self.radius = 7
         self.x_speed = random.randint(-8, 8)
-        self.y_speed = -35
+        self.y_speed = -25
         self.x_accel = 0
-        self.y_accel = 2
+        self.y_accel = 1
         self.color = RED
         self.isVisible = True
         self.particles = []
@@ -330,12 +330,12 @@ class Firework:
             # make particles here
             x = self.x
             y = self.y
-            self.particles.append(FireworkParticle(x, y, 1, 1, self.color))
-            self.particles.append(FireworkParticle(x, y, -1, -1, self.color))
-            self.particles.append(FireworkParticle(x, y, 0, 1, self.color))
-            self.particles.append(FireworkParticle(x, y, 1, 0, self.color))
-            self.particles.append(FireworkParticle(x, y, 0, -1, self.color))
-            self.particles.append(FireworkParticle(x, y, -1, 0, self.color))
+            self.particles.append(FireworkParticle(x, y, 4, 4, self.color))
+            self.particles.append(FireworkParticle(x, y, -4, -4, self.color))
+            self.particles.append(FireworkParticle(x, y, 0, 4, self.color))
+            self.particles.append(FireworkParticle(x, y, 4, 0, self.color))
+            self.particles.append(FireworkParticle(x, y, 0, -4, self.color))
+            self.particles.append(FireworkParticle(x, y, -4, 0, self.color))
 
         for particle in self.particles:
             particle.update()
@@ -362,7 +362,7 @@ class FireworkParticle:
     def update(self):
         self.x += self.x_speed
         self.y += self.y_speed
-        self.alpha -= 3
+        self.alpha -= 12
 
     def draw(self):
         s = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
