@@ -63,6 +63,9 @@ def main():
     DISPLAYSURF.fill(BGCOLOR)
     startGameAnimation(mainBoard)
 
+    # temporary
+    gameWonAnimation()
+
     while True: # main game loop
         mouseClicked = False
 
@@ -101,7 +104,7 @@ def main():
                         revealedBoxes[firstSelection[0]][firstSelection[1]] = False
                         revealedBoxes[boxx][boxy] = False
                     elif hasWon(revealedBoxes): # check if all pairs found
-                        gameWonAnimation(mainBoard)
+                        gameWonAnimation()
                         coverBoxesAnimation(mainBoard, revealedBoxes)
 
                         # Reset the board
@@ -266,54 +269,19 @@ def startGameAnimation(board):
 
     coverBoxesAnimation(board, boxes)
 
-def gameWonAnimation(board):
+def gameWonAnimation():
     background = DISPLAYSURF.copy()
-    firework = {
-            'x': 450,
-            'y': 450,
-            'radius': 7,
-            'x_speed': -3,
-            'y_speed': -35,
-            'x_accel': 0,
-            'y_accel': 2,
-            'color': RED,
-            'isVisible': True
-            }
-    particles = [
-            {'x': 1, 'y': 1, 'x_speed': 1, 'y_speed': 1, 'radius': 5, 'alpha': 255},
-            {'x': 1, 'y': 1, 'x_speed': -1, 'y_speed': -1, 'radius': 5, 'alpha': 255},
-            {'x': 1, 'y': 1, 'x_speed': 0, 'y_speed': 1, 'radius': 5, 'alpha': 255},
-            {'x': 1, 'y': 1, 'x_speed': 1, 'y_speed': 0, 'radius': 5, 'alpha': 255},
-            {'x': 1, 'y': 1, 'x_speed': 0, 'y_speed': -1, 'radius': 5, 'alpha': 255},
-            {'x': 1, 'y': 1, 'x_speed': -1, 'y_speed': 0, 'radius': 5, 'alpha': 255},
-            ]
+    firework = Firework()
 
     while True:
         DISPLAYSURF.blit(background, (0,0))
-        if firework['isVisible']:
-            pygame.draw.circle(DISPLAYSURF, firework['color'], (firework['x'], firework['y']), firework['radius'])
-            firework['x'] += firework['x_speed']
-            firework['x_speed'] += firework['x_accel']
-            firework['y'] += firework['y_speed']
-            firework['y_speed'] += firework['y_accel']
-            if firework['y'] <= 150:
-                firework['isVisible'] = False
-                for particle in particles:
-                    particle['x'] = firework['x']
-                    particle['y'] = firework['y']
-        else: # draw particles
-            for particle in particles:
-                s = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
-                s.set_colorkey((0,0,0))
-                s.set_alpha(particle['alpha'])
-                pygame.draw.circle(s, firework['color'], (particle['x'], particle['y']), particle['radius'])
-                DISPLAYSURF.blit(s, (0,0))
-                particle['x'] += particle['x_speed']
-                particle['y'] += particle['y_speed']
-                particle['alpha'] -= 3
-                if particle['alpha'] <= 0:
-                    return
-                
+        firework.draw()
+        firework.update()
+
+        # if firework has exploded and particles are all gone then firework is done
+        if not firework.isVisible and len(firework.particles) == 0:
+            return
+
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
@@ -324,6 +292,70 @@ def hasWon(revealedBoxes):
             return False # return False if any boxes are covered.
     return True
 
+class Firework:
+
+    def __init__(self):
+        self.x = 450
+        self.y = 450
+        self.radius = 7
+        self.x_speed = -3
+        self.y_speed = -35
+        self.x_accel = 0
+        self.y_accel = 2
+        self.color = RED
+        self.isVisible = True
+        self.particles = []
+
+    def update(self):
+        self.x += self.x_speed
+        self.x_speed += self.x_accel
+        self.y += self.y_speed
+        self.y_speed += self.y_accel
+        if self.isVisible and self.y <= 150: # firework explodes at this point
+            self.isVisible = False
+            # make particles here
+            x = self.x
+            y = self.y
+            self.particles.append(FireworkParticle(x, y, 1, 1, self.color))
+            self.particles.append(FireworkParticle(x, y, -1, -1, self.color))
+            self.particles.append(FireworkParticle(x, y, 0, 1, self.color))
+            self.particles.append(FireworkParticle(x, y, 1, 0, self.color))
+            self.particles.append(FireworkParticle(x, y, 0, -1, self.color))
+            self.particles.append(FireworkParticle(x, y, -1, 0, self.color))
+
+        for particle in self.particles:
+            particle.update()
+            if particle.alpha <= 0:
+                self.particles.remove(particle)
+
+    def draw(self):
+        if self.isVisible:
+            pygame.draw.circle(DISPLAYSURF, self.color, (self.x, self.y), self.radius)
+        for particle in self.particles:
+            particle.draw()
+
+class FireworkParticle:
+
+    def __init__(self, x, y, x_speed, y_speed, color):
+        self.x = x
+        self.y = y
+        self.x_speed = x_speed
+        self.y_speed = y_speed
+        self.radius = 5
+        self.alpha = 255
+        self.color = color
+
+    def update(self):
+        self.x += self.x_speed
+        self.y += self.y_speed
+        self.alpha -= 3
+
+    def draw(self):
+        s = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
+        s.set_colorkey((0, 0, 0))
+        s.set_alpha(self.alpha)
+        pygame.draw.circle(s, self.color, (self.x, self.y), self.radius)
+        DISPLAYSURF.blit(s, (0, 0))
 
 if __name__ == '__main__':
     main()
