@@ -318,13 +318,14 @@ class Firework:
         self.color = RED
         self.isVisible = True
         self.particles = []
+        self.explodeHeight = random.randint(130, 200)
 
     def update(self):
         self.x += self.x_speed
         self.x_speed += self.x_accel
         self.y += self.y_speed
         self.y_speed += self.y_accel
-        if self.isVisible and self.y <= 150: # firework explodes at this point
+        if self.isVisible and self.y <= self.explodeHeight:
             self.isVisible = False
             # make particles here
             x = self.x
