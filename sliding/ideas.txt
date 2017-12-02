@@ -1,2 +1,4 @@
 
 Have the game actually solve a given puzzle in the minimum amount of moves
+Have a display for how many moves the player has made
+Have a display for the minimal number of moves needed to solve a given position
