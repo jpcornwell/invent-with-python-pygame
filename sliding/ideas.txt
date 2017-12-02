@@ -2,3 +2,5 @@
 Have the game actually solve a given puzzle in the minimum amount of moves
 Have a display for how many moves the player has made
 Have a display for the minimal number of moves needed to solve a given position
+Try it in 3 dimensions
+Have some sort of a timer that tracks how long it takes to solve the puzzle
