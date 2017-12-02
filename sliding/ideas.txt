@@ -1,0 +1,2 @@
+
+Have the game actually solve a given puzzle in the minimum amount of moves
