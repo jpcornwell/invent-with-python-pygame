@@ -1,2 +1,2 @@
 
-Try to improve the performance. As it stands the reaction to clicking a button is really slow and can throw off a player's memory.
+Try to improve the reaction time for pressing buttons. As it stands the reaction time can throw off a player's memory. The sluggishness is due to the fact that the entire animation for the current button press has to play before it starts a new one.
