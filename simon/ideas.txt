@@ -1,0 +1,2 @@
+
+Try to improve the performance. As it stands the reaction to clicking a button is really slow and can throw off a player's memory.
